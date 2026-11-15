@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StrivFlow – حمّل التطبيق</title>
+<meta name="description" content="تمارين قاع الحوض للرجال – حمّل تطبيق StrivFlow">
+<meta property="og:title" content="StrivFlow">
+<meta property="og:description" content="تمارين قاع الحوض للرجال – حمّل التطبيق">
+<meta name="theme-color" content="#000000">
+<style>
+  :root { --orange: #FF7A18; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #000; color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+  }
+  main { width: 100%; max-width: 360px; }
+  h1 { font-size: 36px; font-weight: 800; direction: ltr; }
+  h1 span { color: var(--orange); }
+  p { color: #bbb; margin: 10px 0 28px; font-size: 16px; line-height: 1.7; }
+  .btn {
+    display: block; padding: 16px; margin-bottom: 12px;
+    border: 2px solid var(--orange); border-radius: 14px;
+    color: var(--orange); font-size: 17px; font-weight: 700; text-decoration: none;
+  }
+  .btn.primary { background: var(--orange); color: #000; }
+  .note { font-size: 13px; color: #777; margin-top: 8px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Striv<span>Flow</span></h1>
+  <p>تمارين قاع الحوض للرجال<br><span id="status">جاري تحويلك للمتجر…</span></p>
+  <div id="buttons">
+    <a id="ios" class="btn" href="https://apps.apple.com/app/id6802279903">حمّل من App Store</a>
+    <a id="android" class="btn" href="https://play.google.com/store/apps/details?id=com.strivflow.strivflow">حمّل من Google Play</a>
+  </div>
+  <div class="note">إذا ما انفتح المتجر تلقائياً، اضغط الزر المناسب لجوالك</div>
+</main>
+<script>
+(function () {
+  var IOS_URL = "https://apps.apple.com/app/id6802279903";
+  var PLAY_ID = "com.strivflow.strivflow";
+
+  // ?s=snapchat  → يظهر في تقارير Google Play إن التحميل جا من سناب (الافتراضي: tiktok)
+  var src = "tiktok";
+  try {
+    var s = new URLSearchParams(location.search).get("s");
+    if (s) src = s.replace(/[^a-z0-9_-]/gi, "").slice(0, 30) || "tiktok";
+  } catch (e) {}
+
+  var PLAY_URL = "https://play.google.com/store/apps/details?id=" + PLAY_ID +
+    "&referrer=" + encodeURIComponent("utm_source=" + src + "&utm_medium=social");
+
+  function detect(ua, platform, touchPoints) {
+    if (/android/i.test(ua)) return "android";
+    if (/iphone|ipad|ipod/i.test(ua) || (platform === "MacIntel" && touchPoints > 1)) return "ios";
+    return "other";
+  }
+
+  var os = detect(navigator.userAgent || "", navigator.platform || "", navigator.maxTouchPoints || 0);
+  var iosBtn = document.getElementById("ios");
+  var androidBtn = document.getElementById("android");
+  androidBtn.href = PLAY_URL;
+
+  if (os === "ios") {
+    iosBtn.className += " primary";
+    location.replace(IOS_URL);
+  } else if (os === "android") {
+    androidBtn.className += " primary";
+    androidBtn.parentNode.insertBefore(androidBtn, iosBtn);
+    location.replace(PLAY_URL);
+  } else {
+    document.getElementById("status").textContent = "اختر متجر جوالك";
+  }
+})();
+</script>
+</body>
+</html>
